@@ -756,14 +756,14 @@ func (c *Conn) WriteResponse(code int, enhCode EnhancedCode, text ...string) {
 
 	for i := 0; i < len(text)-1; i++ {
 		c.text.PrintfLine("%v-%v", code, text[i])
-		fmt.Printf("%v-%v\n", code, text[i])
+		fmt.Printf("-> %v-%v\n", code, text[i])
 	}
 	if enhCode == NoEnhancedCode {
 		c.text.PrintfLine("%v %v", code, text[len(text)-1])
-		fmt.Printf("%v %v\n", code, text[len(text)-1])
+		fmt.Printf("-> %v %v\n", code, text[len(text)-1])
 	} else {
 		c.text.PrintfLine("%v %v.%v.%v %v", code, enhCode[0], enhCode[1], enhCode[2], text[len(text)-1])
-		fmt.Printf("%v %v.%v.%v %v\n", code, enhCode[0], enhCode[1], enhCode[2], text[len(text)-1])
+		fmt.Printf("-> %v %v.%v.%v %v\n", code, enhCode[0], enhCode[1], enhCode[2], text[len(text)-1])
 	}
 }
 
@@ -775,7 +775,12 @@ func (c *Conn) ReadLine() (string, error) {
 		}
 	}
 
-	return c.text.ReadLine()
+	line, err := c.text.ReadLine()
+	fmt.Printf("<- %v\n", line)
+	if err != nil {
+		fmt.Printf("<x %v\n", err)
+	}
+	return line, err
 }
 
 func (c *Conn) reset() {
